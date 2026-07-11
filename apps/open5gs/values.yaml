@@ -1,0 +1,9 @@
+# EcoCore6G – Open5GS Konfiguration
+open5gs:
+  enabled: true
+
+  # Auf welchem Node soll der Core laufen?
+  # leistung: hoch   = pi-worker1 (simuliert Dell R750)
+  # leistung: niedrig = pi-worker2 (simuliert Minisforum MS-01)
+  nodeSelector:
+    leistung: hoch

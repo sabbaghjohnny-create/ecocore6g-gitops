@@ -1,0 +1,9 @@
+apiVersion: v2
+name: open5gs-deployment
+description: Open5GS 5G Core fuer EcoCore6G
+type: application
+version: 0.1.0
+dependencies:
+  - name: open5gs
+    version: "2.7.0"
+    repository: "https://gradiant.github.io/openverso-charts/"
