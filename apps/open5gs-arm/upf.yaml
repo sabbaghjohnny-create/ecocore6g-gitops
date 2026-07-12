@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open5gs-upf
+  namespace: open5gs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: open5gs-upf
+  template:
+    metadata:
+      labels:
+        app: open5gs-upf
+    spec:
+      nodeSelector:
+        leistung: hoch
+      securityContext:
+        sysctls:
+          - name: net.ipv4.ip_forward
+            value: "1"
+      initContainers:
+        - name: create-log-dir
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /open5gs/install/var/log/open5gs && ip tuntap add name ogstun mode tun || true && ip addr add 10.45.0.1/16 dev ogstun || true && ip link set ogstun up || true"]
+          volumeMounts:
+            - name: log-dir
+              mountPath: /open5gs/install/var/log/open5gs
+          securityContext:
+            privileged: true
+      containers:
+        - name: upf
+          image: ghcr.io/borjis131/upf:v2.7.5
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 8805
+              protocol: UDP
+          volumeMounts:
+            - name: log-dir
+              mountPath: /open5gs/install/var/log/open5gs
+      volumes:
+        - name: log-dir
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: open5gs-upf
+  namespace: open5gs
+spec:
+  selector:
+    app: open5gs-upf
+  ports:
+    - port: 8805
+      protocol: UDP
