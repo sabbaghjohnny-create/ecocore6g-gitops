@@ -15,11 +15,24 @@ spec:
     spec:
       nodeSelector:
         leistung: hoch
+      initContainers:
+        - name: create-log-dir
+          image: busybox
+          command: ["mkdir", "-p", "/open5gs/install/var/log/open5gs"]
+          volumeMounts:
+            - name: log-dir
+              mountPath: /open5gs/install/var/log/open5gs
       containers:
         - name: nrf
           image: ghcr.io/borjis131/nrf:v2.7.5
           ports:
             - containerPort: 7777
+          volumeMounts:
+            - name: log-dir
+              mountPath: /open5gs/install/var/log/open5gs
+      volumes:
+        - name: log-dir
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
