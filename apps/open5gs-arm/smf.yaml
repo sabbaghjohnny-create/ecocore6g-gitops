@@ -1,3 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: open5gs-smf-config
+  namespace: open5gs
+data:
+  smf.yaml: |
+    logger:
+      file:
+        path: /open5gs/install/var/log/open5gs/smf.log
+    smf:
+      sbi:
+        server:
+          - address: 0.0.0.0
+            port: 7777
+        client:
+          nrf:
+            - uri: http://open5gs-nrf:7777
+      pfcp:
+        server:
+          - address: 0.0.0.0
+        client:
+          upf:
+            - address: open5gs-upf
+      session:
+        - subnet: 10.45.0.0/16
+          gateway: 10.45.0.1
+      dns:
+        - 8.8.8.8
+        - 8.8.4.4
+      mtu: 1400
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,14 +57,20 @@ spec:
       containers:
         - name: smf
           image: ghcr.io/borjis131/smf:v2.7.5
+          args: ["-c", "/open5gs/config/smf.yaml"]
           ports:
             - containerPort: 7777
           volumeMounts:
             - name: log-dir
               mountPath: /open5gs/install/var/log/open5gs
+            - name: config
+              mountPath: /open5gs/config
       volumes:
         - name: log-dir
           emptyDir: {}
+        - name: config
+          configMap:
+            name: open5gs-smf-config
 ---
 apiVersion: v1
 kind: Service
