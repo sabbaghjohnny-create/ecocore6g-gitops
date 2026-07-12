@@ -1,9 +1,0 @@
-apiVersion: v2
-name: nginx-test
-description: GitOps Test mit nginx
-type: application
-version: 0.1.0
-dependencies:
-  - name: nginx
-    version: "18.3.6"
-    repository: "https://charts.bitnami.com/bitnami"
