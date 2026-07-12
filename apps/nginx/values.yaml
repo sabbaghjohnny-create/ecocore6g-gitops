@@ -1,0 +1,4 @@
+nginx:
+  replicaCount: 1
+  nodeSelector:
+    leistung: hoch
