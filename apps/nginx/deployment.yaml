@@ -14,7 +14,7 @@ spec:
         app: nginx-test
     spec:
       nodeSelector:
-        leistung: hoch
+        leistung: niedrig
       containers:
         - name: nginx
           image: nginx:stable-alpine
