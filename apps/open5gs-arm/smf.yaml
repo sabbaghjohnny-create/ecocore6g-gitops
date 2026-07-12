@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open5gs-smf
+  namespace: open5gs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: open5gs-smf
+  template:
+    metadata:
+      labels:
+        app: open5gs-smf
+    spec:
+      nodeSelector:
+        leistung: hoch
+      initContainers:
+        - name: create-log-dir
+          image: busybox
+          command: ["mkdir", "-p", "/open5gs/install/var/log/open5gs"]
+          volumeMounts:
+            - name: log-dir
+              mountPath: /open5gs/install/var/log/open5gs
+      containers:
+        - name: smf
+          image: ghcr.io/borjis131/smf:v2.7.5
+          ports:
+            - containerPort: 7777
+          volumeMounts:
+            - name: log-dir
+              mountPath: /open5gs/install/var/log/open5gs
+      volumes:
+        - name: log-dir
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: open5gs-smf
+  namespace: open5gs
+spec:
+  selector:
+    app: open5gs-smf
+  ports:
+    - port: 7777
