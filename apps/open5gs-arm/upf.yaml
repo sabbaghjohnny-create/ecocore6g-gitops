@@ -14,7 +14,7 @@ spec:
         app: open5gs-upf
     spec:
       nodeSelector:
-        leistung: hoch
+        leistung: niedrig
       securityContext:
         sysctls:
           - name: net.ipv4.ip_forward

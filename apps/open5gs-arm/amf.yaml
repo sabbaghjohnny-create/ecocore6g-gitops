@@ -14,7 +14,7 @@ spec:
         app: open5gs-amf
     spec:
       nodeSelector:
-        leistung: hoch
+        leistung: niedrig
       initContainers:
         - name: create-log-dir
           image: busybox

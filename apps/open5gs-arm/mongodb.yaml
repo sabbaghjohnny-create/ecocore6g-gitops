@@ -14,7 +14,7 @@ spec:
         app: mongodb
     spec:
       nodeSelector:
-        leistung: hoch
+        leistung: niedrig
       containers:
         - name: mongodb
           image: mongo:6.0
