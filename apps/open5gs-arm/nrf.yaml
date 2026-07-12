@@ -17,7 +17,7 @@ spec:
         leistung: hoch
       containers:
         - name: nrf
-          image: ghcr.io/borjis131/open5gs/nrf:v2.7.5
+          image: ghcr.io/borjis131/nrf:v2.7.5
           ports:
             - containerPort: 7777
 ---
